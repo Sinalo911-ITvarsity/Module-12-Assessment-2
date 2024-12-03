@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Contact</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+       <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+    <form id="editform">
+        <label for="firstname">First name</label>
+        <input type="text" name="firstname" id="firstname" required><br/>
+        <label for="lastname">Last name</label>
+        <input type="text" name="lastname" id="lastname" required><br/>
+        <label for="mobile">Mobile</label>
+        <input type="text" name="mobile" id="mobile" required><br/>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required><br/>
+        <label for="avatar">Select a file</label><br/>
+        <input type="file" name="avatar" id="avatar"><br/>
+        <button type="button" id="submitForm">Submit</button>
+    </form>
+    <br/>
+    <button id="homeLink" type="button">Home</button>
+
+    <script src="config.js"></script>
+    <script>
+        document.getElementById("submitForm").addEventListener('click', submitForm);
+        document.getElementById("homeLink").addEventListener('click', homeLink);
+
+        // Fixed API Key
+        const fixedApiKey = "mbobosinalo17@gmail.com";
+
+        function submitForm(e) {
+            e.preventDefault();
+
+            // Create FormData from the form
+            const form = new FormData(document.querySelector('#editform'));
+            form.append('apiKey', fixedApiKey); // Append the fixed API key
+
+            fetch(rootPath + 'controller/insert-contact/', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json, *.*' },
+                body: form
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === "1") {
+                    alert("Contact added successfully!");
+                    homeLink();
+                } else {
+                    alert("Error: " + data);
+                }
+            })
+            .catch(error => {
+                console.error("Error submitting contact:", error);
+                alert("There was a problem submitting the contact. Please try again.");
+            });
+        }
+
+        function homeLink() {
+            window.open("index.html", "_self");
+        }
+    </script>
+</body>
+</html>
